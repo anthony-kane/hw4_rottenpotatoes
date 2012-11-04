@@ -16,7 +16,6 @@ class MoviesController < ApplicationController
     end
     @all_ratings = Movie.all_ratings
     @selected_ratings = params[:ratings] || session[:ratings] || {}
-    
     if @selected_ratings == {}
       @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
     end
@@ -64,4 +63,15 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def director
+    id = params[:id]
+    @movie = Movie.find(id)
+    if @movie.director == nil || @movie.director.length == 0  then 
+      flash[:notice] = "'"+@movie.title + "' has no director info" 
+      redirect_to movies_path
+    else 
+      @movies = Movie.find_all_by_director(@movie.director)
+    end 
+  end 
+   
 end
